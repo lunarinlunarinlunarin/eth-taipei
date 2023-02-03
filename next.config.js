@@ -1,8 +1,7 @@
-/** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    appDir: true,
+  images: {
+    domains: ["cdn.shopify.com", "upcdn.io"],
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
