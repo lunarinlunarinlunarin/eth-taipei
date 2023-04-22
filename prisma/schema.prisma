@@ -10,18 +10,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Positions {
+model Position {
   id Int @id @default(autoincrement())
   address String	
-  spend_token	String
+  source_token	String
   total_amount	Decimal
-  pair_address	String
-  recurring_cycle_amount	Int
-  recurring_cycle	Interval
+  paired_token	String
+  interval_count	Int
+  interval	Interval
   last_swap_at DateTime
   next_swap_at DateTime
   swap_success_tx_hash	String[]
-  failure_tx_count Int?
+  failure_tx_count Int @default(0)
 }
 
 enum Interval {
