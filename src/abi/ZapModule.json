@@ -229,6 +229,11 @@
 				"internalType": "address",
 				"name": "pairedToken",
 				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "sourceAmount",
+				"type": "uint256"
 			}
 		],
 		"name": "executeZap",
