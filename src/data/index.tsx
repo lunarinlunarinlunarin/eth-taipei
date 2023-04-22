@@ -119,3 +119,6 @@ export const CHAIN_INFO = {
     rpcUrls: [`https://goerli-rollup.arbitrum.io/rpc`],
   },
 };
+
+export const SALT = "1234567890";
+export const USDC_ADDRESS = "0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83";
