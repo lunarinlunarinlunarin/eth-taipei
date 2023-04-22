@@ -15,6 +15,16 @@ import Image from "next/image";
 import { CreateSafe } from "../components/CreateSafe";
 import { ConnectScreen } from "../components/ConnectScreen";
 import LoadingDots from "../components/LoadingDots";
+import LoadingScreen from "../components/LoadingScreen";
+import { AllowZap } from "../components/AllowZap";
+import { useSafeAppsSDK } from "@gnosis.pm/safe-apps-react-sdk";
+import zapAbi from "../abi/ZapModule.json";
+import { Interface } from "@ethersproject/abi";
+import { SafeTransaction, SafeTransactionDataPartial } from "@safe-global/safe-core-sdk-types";
+import { AddWorker } from "../components/AddWorker";
+import { AddModule } from "../components/AddModule";
+
+export const ZapInterface = new Interface(zapAbi);
 
 export const useIsMounted = () => {
   const [mounted, setMounted] = useState(false);
@@ -40,6 +50,7 @@ export default function Home() {
   const { disconnect } = useDisconnect();
   const provider = useProvider();
   const { data: signer } = useSigner();
+  const { sdk, connected, safe } = useSafeAppsSDK();
 
   useEffect(() => {
     const init = async () => {
@@ -69,6 +80,7 @@ export default function Home() {
         try {
           const safeSdk: Safe = await Safe.create({ ethAdapter, safeAddress });
           setSafeSdk(safeSdk);
+          const a = await safeSdk.getModules();
           setView(PAGE_VIEW.HAS_WALLET);
         } catch (error) {
           setView(PAGE_VIEW.CREATE);
@@ -87,7 +99,7 @@ export default function Home() {
         <Image height={30} width={115} src="/logo.png" alt="Brand Logo" />
 
         {isLoading ? (
-          <LoadingDots className="w-24 h-24" />
+          <LoadingDots />
         ) : PAGE_VIEW.CONNECT === view ? (
           <ConnectScreen />
         ) : PAGE_VIEW.CREATE === view ? (
@@ -104,11 +116,14 @@ export default function Home() {
             </div>
             <div className="flex flex-col items-center space-y-4">
               <TransferFundsToSafe safeAccountAddress={safeAccountAddress} decimals={decimals} />
-              <Button secondary onClick={() => disconnect()} text="Disconnect" />
             </div>
+            <AddModule safeSdk={safeSdk} />
+            <AddWorker safeSdk={safeSdk} />
+            <AllowZap safeSdk={safeSdk} />
           </div>
         )}
       </div>
+      <Button secondary onClick={() => disconnect()} text="Disconnect" />
     </div>
   );
 }

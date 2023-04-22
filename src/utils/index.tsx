@@ -1,3 +1,5 @@
+import { useCallback } from "react";
+
 export function truncate(text?: string, [h, t]: [number, number] = [6, 4]): string {
   if (!text) return "";
   const head = text.slice(0, h);

@@ -11,6 +11,8 @@
   "dependencies": {
     "@blocto/sdk": "^0.4.3",
     "@furucombo/composable-router-api": "^0.1.10",
+    "@gnosis.pm/safe-apps-react-sdk": "^4.6.2",
+    "@gnosis.pm/safe-apps-sdk": "^7.8.0",
     "@heroicons/react": "^1.0.6",
     "@next/font": "13.1.6",
     "@prisma/client": "4.13.0",
