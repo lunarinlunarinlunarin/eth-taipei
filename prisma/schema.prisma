@@ -9,3 +9,24 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Positions {
+  id Int @id @default(autoincrement())
+  address String	
+  spend_token	String
+  total_amount	Decimal
+  pool_address	String
+  recurring_cycle_amount	Int
+  recurring_cycle	Interval
+  last_swapped DateTime
+  swap_success_tx_hash	String[]
+  failure_tx_count Int?
+}
+
+enum Interval {
+  MONTH
+  YEAR
+  DAY
+  WEEK
+  HOUR
+}
