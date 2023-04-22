@@ -50,7 +50,6 @@ export default function Home() {
   const { disconnect } = useDisconnect();
   const provider = useProvider();
   const { data: signer } = useSigner();
-  const { sdk, connected, safe } = useSafeAppsSDK();
 
   useEffect(() => {
     const init = async () => {
@@ -95,7 +94,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col w-full min-h-screen py-2">
-      <div className="mx-8 flex h-[calc(100vw-100px)] w-full flex-col items-center">
+      <div className="mx-8 flex h-[calc(100vw-100px)] w-full flex-col items-start">
         <Image height={30} width={115} src="/logo.png" alt="Brand Logo" />
 
         {isLoading ? (
@@ -118,8 +117,8 @@ export default function Home() {
               <TransferFundsToSafe safeAccountAddress={safeAccountAddress} decimals={decimals} />
             </div>
             <AddModule safeSdk={safeSdk} />
-            <AddWorker safeSdk={safeSdk} />
-            <AllowZap safeSdk={safeSdk} />
+            <AddWorker safeSdk={safeSdk} safeAccountAddress={safeAccountAddress} />
+            <AllowZap safeSdk={safeSdk} safeAccountAddress={safeAccountAddress} />
           </div>
         )}
       </div>

@@ -4,14 +4,17 @@ import { useEffect, useState } from "react";
 import { useAccount, useSigner } from "wagmi";
 import { CheckIcon } from "@heroicons/react/24/outline";
 import { Button } from "../Button/button";
+import { ZAP_MODULE_ADDRESS } from "../../utils/constants";
 
 export const AddModule = ({ safeSdk }: { safeSdk: Safe | null }) => {
   const { data: signer } = useSigner();
   const { address } = useAccount();
   const [isEnabled, setIsEnabled] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   useEffect(() => {
     const init = async () => {
-      const isEnabled = await safeSdk?.isModuleEnabled("0xb21d04D9278Df116B418ed803d1858E9c3c98a9F");
+      const isEnabled = await safeSdk?.isModuleEnabled(ZAP_MODULE_ADDRESS);
       setIsEnabled(!!isEnabled);
     };
     init();
@@ -21,12 +24,15 @@ export const AddModule = ({ safeSdk }: { safeSdk: Safe | null }) => {
   async function addModule() {
     if (!signer || !address || !safeSdk) return;
     try {
-      const safeTx = await safeSdk?.createEnableModuleTx("0xb21d04D9278Df116B418ed803d1858E9c3c98a9F");
+      const safeTx = await safeSdk?.createEnableModuleTx(ZAP_MODULE_ADDRESS);
       if (safeTx) {
         const txResponse = await safeSdk?.executeTransaction(safeTx);
         const abc = await txResponse?.transactionResponse?.wait();
       }
-    } catch (error) {}
+    } catch (error) {
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
