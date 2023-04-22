@@ -37,3 +37,7 @@ export async function executeZap(safeAddress: string, sourceToken: string, paire
 function encodeExecuteZap(safeAddress: string, sourceToken: string, pairedToken: string, fullAmount: number) {
   return ZapInterface.encodeFunctionData("executeZap", [safeAddress, sourceToken, pairedToken, fullAmount]);
 }
+
+executeZap("0x77E6F86B9D92c6610804CDeaebe74791C6584826", "0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83", "0x6A023CCd1ff6F2045C3309768eAd9E68F978f6e1", 0.01).then(
+  (tx) => console.log(tx.hash)
+);
