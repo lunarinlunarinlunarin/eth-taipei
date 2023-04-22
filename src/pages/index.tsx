@@ -23,6 +23,9 @@ import { Interface } from "@ethersproject/abi";
 import { SafeTransaction, SafeTransactionDataPartial } from "@safe-global/safe-core-sdk-types";
 import { AddWorker } from "../components/AddWorker";
 import { AddModule } from "../components/AddModule";
+import { Network } from "../components/Network";
+import { Coin } from "../components/Coin";
+import React from "react";
 
 export const ZapInterface = new Interface(zapAbi);
 
@@ -120,6 +123,14 @@ export default function Home() {
             <AddModule safeSdk={safeSdk} />
             <AddWorker safeSdk={safeSdk} />
             <AllowZap safeSdk={safeSdk} />
+
+            <div style={{background: '#ddd', padding: '1rem', borderRadius: '20px'}} >
+            <Network title={'network:'} value={gnosis.name}/>
+            <Coin fromValue={'USDC'} toValue={'DAI'}/>
+            <Network title={'How much do you want to invest?'} value={gnosis.name}/>
+            <Network title={'How many days?'} value={gnosis.name}/>
+            
+            </div>
           </div>
         )}
       </div>
