@@ -122,3 +122,16 @@ export const CHAIN_INFO = {
 
 export const SALT = "1234567890";
 export const USDC_ADDRESS = "0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83";
+
+export const TokenList = {
+  USDC: {
+    address: "0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83",
+    logo: "/usdc.webp",
+    label: "USDC",
+  },
+  WETH: {
+    address: "0x6A023CCd1ff6F2045C3309768eAd9E68F978f6e1",
+    logo: "/eth_logo.svg",
+    label: "WETH",
+  },
+};

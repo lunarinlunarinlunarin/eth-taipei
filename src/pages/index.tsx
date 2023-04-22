@@ -9,7 +9,7 @@ import ERC20ABI from "../abi/ERC20Token.json";
 import { useEffect, useState } from "react";
 import { Button } from "../components/Button/button";
 import { truncate } from "../utils";
-import { SALT, USDC_ADDRESS } from "../data";
+import { SALT, TokenList, USDC_ADDRESS } from "../data";
 import { TransferFundsToSafe } from "../components/TransferFundsToSafe";
 import Image from "next/image";
 import { CreateSafe } from "../components/CreateSafe";
@@ -23,6 +23,10 @@ import { Interface } from "@ethersproject/abi";
 import { SafeTransaction, SafeTransactionDataPartial } from "@safe-global/safe-core-sdk-types";
 import { AddWorker } from "../components/AddWorker";
 import { AddModule } from "../components/AddModule";
+import { Network } from "../components/Network";
+import { Coin } from "../components/Coin";
+import React from "react";
+import { Invest } from "../components/Invest";
 
 export const ZapInterface = new Interface(zapAbi);
 
@@ -50,6 +54,8 @@ export default function Home() {
   const { disconnect } = useDisconnect();
   const provider = useProvider();
   const { data: signer } = useSigner();
+  const [fromToken, setFromToken] = useState(TokenList.USDC);
+  const [toToken, setToToken] = useState(TokenList.WETH);
 
   useEffect(() => {
     const init = async () => {
@@ -104,21 +110,28 @@ export default function Home() {
         ) : PAGE_VIEW.CREATE === view ? (
           <CreateSafe safeFactory={safeFactory} setSafeSdk={setSafeSdk} />
         ) : (
-          <div className="flex w-[600px] flex-col space-y-4">
-            <div className="flex flex-col">
-              <span className="">Safe Address</span>
-              <span className="text-xs"> {truncate(safeSdk?.getAddress())}</span>
+          <div className="flex flex-row gap-8">
+            <div className="flex w-[600px] flex-col space-y-4">
+              <div className="flex flex-col">
+                <span className="">Safe Address</span>
+                <span className="text-xs"> {truncate(safeSdk?.getAddress())}</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="">Balance</span>
+                {userUSDCBalance && <span className="text-xs">{userUSDCBalance?.toString()} USDC</span>}
+              </div>
+              <div className="flex flex-col items-center space-y-4">
+                <TransferFundsToSafe safeAccountAddress={safeAccountAddress} decimals={decimals} />
+              </div>
+              <AddModule safeSdk={safeSdk} />
+              <AddWorker safeSdk={safeSdk} safeAccountAddress={safeAccountAddress} />
+              <AllowZap safeSdk={safeSdk} safeAccountAddress={safeAccountAddress} />
             </div>
-            <div className="flex flex-col">
-              <span className="">Balance</span>
-              {userUSDCBalance && <span className="text-xs">{userUSDCBalance?.toString()} USDC</span>}
+            <div className="w-full" style={{ background: "#ddd", padding: "1rem", borderRadius: "20px" }}>
+              <Network title={"Network:"} value={gnosis.name} />
+              <Coin toToken={toToken} setToToken={setToToken} fromToken={fromToken} setFromToken={setFromToken} />
+              <Invest token={fromToken} safeAddress={safeAccountAddress} />
             </div>
-            <div className="flex flex-col items-center space-y-4">
-              <TransferFundsToSafe safeAccountAddress={safeAccountAddress} decimals={decimals} />
-            </div>
-            <AddModule safeSdk={safeSdk} />
-            <AddWorker safeSdk={safeSdk} safeAccountAddress={safeAccountAddress} />
-            <AllowZap safeSdk={safeSdk} safeAccountAddress={safeAccountAddress} />
           </div>
         )}
       </div>

@@ -21,6 +21,7 @@ export const AddModule = ({ safeSdk }: { safeSdk: Safe | null }) => {
   }, [safeSdk]);
 
   if (!safeSdk) return null;
+
   async function addModule() {
     if (!signer || !address || !safeSdk) return;
     try {

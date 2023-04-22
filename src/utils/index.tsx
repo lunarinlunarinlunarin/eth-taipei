@@ -20,3 +20,7 @@ export const toValidInput = (value: string, regex: RegExp) => {
 export function constuctExplorerUrl(txHash: string) {
   return "https://gnosisscan.io/tx/" + txHash;
 }
+
+export function classNames(...classes) {
+  return classes.filter(Boolean).join(" ");
+}
