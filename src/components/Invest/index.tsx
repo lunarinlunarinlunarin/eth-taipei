@@ -5,8 +5,7 @@ import { toValidInput } from "../../utils";
 import ERC20ABI from "../../abi/ERC20Token.json";
 import { useProvider, useSigner } from "wagmi";
 
-export const Invest = ({ token, safeAddress }) => {
-  const [amount, setAmount] = useState("");
+export const Invest = ({ token, safeAddress, setAmount }) => {
   const [userBalance, setUserBalance] = useState<number>(0);
   const provider = useProvider();
   const { data: signer } = useSigner();

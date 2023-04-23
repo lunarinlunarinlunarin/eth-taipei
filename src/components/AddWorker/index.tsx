@@ -60,7 +60,6 @@ export const AddWorker = ({ safeSdk, safeAccountAddress }: { safeSdk: Safe | nul
       setIsLoading(false);
     }
   }
-  console.log(isEnabled);
   return (
     <div className="flex flex-row justify-between">
       <div className="flex flex-row items-center space-x-2">
@@ -76,9 +75,18 @@ export const AddWorker = ({ safeSdk, safeAccountAddress }: { safeSdk: Safe | nul
       <Button
         onClick={() => addWorker()}
         primary
-        text={isLoading ? <LoadingDots /> : "Add Worker"}
-        className="flex items-center h-12 w-36"
-        disabled={isEnabled}
+        text={
+          isLoading ? (
+            <span className="flex flex-row items-center space-x-1">
+              <span>Adding worker</span>
+              <LoadingDots />
+            </span>
+          ) : (
+            "Add Worker"
+          )
+        }
+        className="text-sm w-44"
+        disabled={isEnabled || isLoading}
       />
     </div>
   );

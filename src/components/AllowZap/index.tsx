@@ -10,7 +10,7 @@ import { Button } from "../Button/button";
 import LoadingDots from "../LoadingDots";
 import ZapModule from "../../abi/ZapModule.json";
 
-export const AllowZap = ({ safeSdk, safeAccountAddress }: { safeSdk: Safe | null; safeAccountAddress: string }) => {
+export const AllowZap = ({ safeSdk, safeAccountAddress, fromToken, toToken }: { safeSdk: Safe | null; safeAccountAddress: string; fromToken; toToken }) => {
   const { data: signer } = useSigner();
   const { address } = useAccount();
   const [isEnabled, setIsEnabled] = useState<boolean>(false);
@@ -20,15 +20,11 @@ export const AllowZap = ({ safeSdk, safeAccountAddress }: { safeSdk: Safe | null
   useEffect(() => {
     const init = async () => {
       const USDC = new ethers.Contract(ZAP_MODULE_ADDRESS, ZapModule, provider);
-      const isAuthorized = await USDC.isSafeSourcePairedZappable(
-        safeAccountAddress,
-        "0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83",
-        "0x6A023CCd1ff6F2045C3309768eAd9E68F978f6e1"
-      );
+      const isAuthorized = await USDC.isSafeSourcePairedZappable(safeAccountAddress, fromToken.address, toToken.address);
       setIsEnabled(!!isAuthorized);
     };
     init();
-  }, [provider, safeAccountAddress]);
+  }, [provider, safeAccountAddress, toToken, fromToken]);
   if (!safeSdk) return null;
 
   async function zap() {
@@ -37,7 +33,7 @@ export const AllowZap = ({ safeSdk, safeAccountAddress }: { safeSdk: Safe | null
     try {
       const safeTransactionData: SafeTransactionDataPartial = {
         to: ZAP_MODULE_ADDRESS,
-        data: ZapInterface.encodeFunctionData("addAllowedZap", ["0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83", "0x6A023CCd1ff6F2045C3309768eAd9E68F978f6e1"]),
+        data: ZapInterface.encodeFunctionData("addAllowedZap", [fromToken.address, toToken.address]),
         value: "0",
       };
 
@@ -67,7 +63,22 @@ export const AllowZap = ({ safeSdk, safeAccountAddress }: { safeSdk: Safe | null
         </span>
         <span className="text-xs">Allowing Gnoberra to swap and provide on your behalf</span>
       </div>
-      <Button onClick={() => zap()} primary text={isLoading ? <LoadingDots /> : "Allow Zap"} className="flex items-center h-12 w-36" disabled={isEnabled} />
+      <Button
+        onClick={() => zap()}
+        primary
+        text={
+          isLoading ? (
+            <span className="flex flex-row items-center space-x-1">
+              <span>Allowing zap</span>
+              <LoadingDots />
+            </span>
+          ) : (
+            "Allow Zap"
+          )
+        }
+        className="text-sm w-44"
+        disabled={isEnabled || isLoading}
+      />
     </div>
   );
 };

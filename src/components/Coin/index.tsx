@@ -1,8 +1,3 @@
-import Safe from "@safe-global/protocol-kit";
-import { SafeTransaction, SafeTransactionDataPartial } from "@safe-global/safe-core-sdk-types";
-import { useAccount, useSigner } from "wagmi";
-import { ZapInterface } from "../../pages";
-import { Button } from "../Button/button";
 import React, { Fragment } from "react";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 import { Listbox, Transition } from "@headlessui/react";

@@ -8,7 +8,7 @@ import { useState } from "react";
 import { constuctExplorerUrl, toValidInput } from "../../utils";
 import LoadingDots from "../LoadingDots";
 
-export function TransferFundsToSafe({ safeAccountAddress, decimals }: { safeAccountAddress: string; decimals: number | null }) {
+export function TransferFundsToSafe({ safeAccountAddress, decimals, mutateBalance }: { safeAccountAddress: string; decimals: number | null; mutateBalance }) {
   const [amount, setAmount] = useState("");
   const [txhash, setTxHash] = useState<string | null>(null);
   const [transferLoading, setTransferLoading] = useState<boolean>(false);
@@ -27,6 +27,7 @@ export function TransferFundsToSafe({ safeAccountAddress, decimals }: { safeAcco
         if (receipt) {
           setTransferLoading(false);
           setTxHash(receipt.transactionHash);
+          mutateBalance();
         }
       }
     } catch (error) {}
