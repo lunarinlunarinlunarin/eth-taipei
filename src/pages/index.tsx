@@ -60,7 +60,7 @@ export default function Home() {
   const [swapLoading, setSwapLoading] = useState<boolean>(false);
   const [successSwapTx, setSuccessSwapTx] = useState<any>(null);
   const { tokenBalance, decimals, mutate: mutateBalance } = useUserBalance(safeAccountAddress, fromToken);
-  const { tokenBalance: EOABalance } = useUserBalance(address, fromToken);
+  const { tokenBalance: EOABalance, mutate: mutateEOABalance } = useUserBalance(address, fromToken);
 
   useEffect(() => {
     const init = async () => {
@@ -85,6 +85,7 @@ export default function Home() {
         try {
           const safeSdk: Safe = await Safe.create({ ethAdapter, safeAddress });
           setView(PAGE_VIEW.HAS_WALLET);
+          mutateEOABalance();
           setSafeSdk(safeSdk);
         } catch (error) {
           setView(PAGE_VIEW.CREATE);
