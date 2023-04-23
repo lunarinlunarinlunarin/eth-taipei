@@ -214,7 +214,7 @@ export default function Home() {
                       )
                     }
                     className="flex flex-row items-center h-12 w-80"
-                    disabled={!hasSufficientBalance || !amount}
+                    disabled={!hasSufficientBalance || !amount || swapLoading}
                   />
                 </div>
               </div>
