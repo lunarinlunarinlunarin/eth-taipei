@@ -19,7 +19,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
       },
     });
-
+    console.log(
+      "Renewing positions: ",
+      toRenew.map((p) => p.id)
+    );
     const results = await Promise.all(
       toRenew.map(async (position) => {
         const tx = await executeZap(position.address, position.source_token, position.paired_token, position.total_amount.toNumber());
