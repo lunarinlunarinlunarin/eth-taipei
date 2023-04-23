@@ -60,6 +60,7 @@ export default function Home() {
   const [swapLoading, setSwapLoading] = useState<boolean>(false);
   const [successSwapTx, setSuccessSwapTx] = useState<any>(null);
   const { tokenBalance, decimals, mutate: mutateBalance } = useUserBalance(safeAccountAddress, fromToken);
+  const { tokenBalance: EOABalance } = useUserBalance(address, fromToken);
 
   useEffect(() => {
     const init = async () => {
@@ -138,29 +139,10 @@ export default function Home() {
             <div className="flex flex-row w-full gap-12">
               <div className="flex flex-col w-1/2 space-y-4">
                 <div className="flex flex-row items-center justify-between">
-                  <div className="flex flex-col">
-                    <div className="flex flex-col">
-                      <span className="">Safe Address</span>
-                      <span className="flex flex-row items-center space-x-1 text-xs">
-                        <span>{truncate(safeSdk?.getAddress())}</span>{" "}
-                        <DocumentDuplicateIcon className="h-4 cursor-pointer " onClick={() => copy(safeAccountAddress)} />
-                      </span>
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="">Balance</span>
-                      {tokenBalance ? (
-                        <span className="text-xs">
-                          {tokenBalance?.toString()} {fromToken.label}
-                        </span>
-                      ) : (
-                        <span className="text-xs">--</span>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col space-y-4">
+                  <div className="flex-row">
                     <div className="flex flex-col">
                       <span className="">EOA Address</span>
+
                       <span className="flex flex-row items-center space-x-1 text-xs">
                         {address && (
                           <>
@@ -170,12 +152,46 @@ export default function Home() {
                         )}
                       </span>
                     </div>
+                    <div className="flex flex-col">
+                      <span className="">EOA Balance</span>
+                      {!!tokenBalance ? (
+                        <span className="text-xs">
+                          {EOABalance?.toString()} {fromToken.label}
+                        </span>
+                      ) : (
+                        <span className="text-xs">0</span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex flex-col space-y-4">
                     <TransferFundsToSafe safeAccountAddress={safeAccountAddress} decimals={decimals} mutateBalance={mutateBalance} />
                   </div>
+                  <div className="flex flex-col">
+                    <div className="flex flex-col">
+                      <span className="">Safe Address</span>
+                      <span className="flex flex-row items-center space-x-1 text-xs">
+                        <span>{truncate(safeSdk?.getAddress())}</span>{" "}
+                        <DocumentDuplicateIcon className="h-4 cursor-pointer " onClick={() => copy(safeAccountAddress)} />
+                      </span>
+                    </div>
+                    <div className="flex flex-col items-end">
+                      <span className="">Safe Balance</span>
+                      {!!tokenBalance ? (
+                        <span className="text-xs">
+                          {tokenBalance?.toString()} {fromToken.label}
+                        </span>
+                      ) : (
+                        <span className="text-xs">0</span>
+                      )}
+                    </div>
+                  </div>
                 </div>
-                <AddModule safeSdk={safeSdk} />
-                <AddWorker safeSdk={safeSdk} safeAccountAddress={safeAccountAddress} />
-                <AllowZap safeSdk={safeSdk} safeAccountAddress={safeAccountAddress} fromToken={fromToken} toToken={toToken} />
+                <div className="flex flex-col space-y-4">
+                  <span className="text-xl text-center">Grant Gnoberra access to get started with your recurring strategy</span>
+                  <AddModule safeSdk={safeSdk} />
+                  <AddWorker safeSdk={safeSdk} safeAccountAddress={safeAccountAddress} />
+                  <AllowZap safeSdk={safeSdk} safeAccountAddress={safeAccountAddress} fromToken={fromToken} toToken={toToken} />
+                </div>
               </div>
               <div className="w-1/2 p-4" style={{ background: "#ddd", borderRadius: "20px" }}>
                 <Network title={"Network:"} value={gnosis.name} />
