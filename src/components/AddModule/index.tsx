@@ -4,31 +4,43 @@ import { useEffect, useState } from "react";
 import { useAccount, useSigner } from "wagmi";
 import { CheckIcon } from "@heroicons/react/24/outline";
 import { Button } from "../Button/button";
+import { ZAP_MODULE_ADDRESS } from "../../utils/constants";
+import LoadingDots from "../LoadingDots";
 
 export const AddModule = ({ safeSdk }: { safeSdk: Safe | null }) => {
   const { data: signer } = useSigner();
   const { address } = useAccount();
   const [isEnabled, setIsEnabled] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   useEffect(() => {
     const init = async () => {
-      const isEnabled = await safeSdk?.isModuleEnabled("0xb21d04D9278Df116B418ed803d1858E9c3c98a9F");
+      const isEnabled = await safeSdk?.isModuleEnabled(ZAP_MODULE_ADDRESS);
       setIsEnabled(!!isEnabled);
     };
     init();
   }, [safeSdk]);
 
   if (!safeSdk) return null;
+
   async function addModule() {
     if (!signer || !address || !safeSdk) return;
+    setIsLoading(true);
+
     try {
-      const safeTx = await safeSdk?.createEnableModuleTx("0xb21d04D9278Df116B418ed803d1858E9c3c98a9F");
+      const safeTx = await safeSdk?.createEnableModuleTx(ZAP_MODULE_ADDRESS);
       if (safeTx) {
         const txResponse = await safeSdk?.executeTransaction(safeTx);
-        const abc = await txResponse?.transactionResponse?.wait();
+        const txResult = await txResponse?.transactionResponse?.wait();
+        if (txResult) {
+          setIsEnabled(true);
+        }
       }
-    } catch (error) {}
+    } catch (error) {
+    } finally {
+      setIsLoading(false);
+    }
   }
-
   return (
     <div className="flex flex-row justify-between">
       <div className="flex flex-row items-center space-x-2">
@@ -41,7 +53,22 @@ export const AddModule = ({ safeSdk }: { safeSdk: Safe | null }) => {
         </span>
         <span className="text-xs">Grant Gnoberra access to your Safe.</span>
       </div>
-      <Button onClick={() => addModule()} primary text="Add Module" className="w-36" disabled={isEnabled} />
+      <Button
+        onClick={() => addModule()}
+        primary
+        text={
+          isLoading ? (
+            <span className="flex flex-row items-center space-x-1">
+              <span>Adding module</span>
+              <LoadingDots />
+            </span>
+          ) : (
+            "Add Module"
+          )
+        }
+        className="text-sm w-44"
+        disabled={isEnabled || isLoading}
+      />
     </div>
   );
 };
